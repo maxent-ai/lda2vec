@@ -548,9 +548,12 @@ class Corpus():
         choices = np.array(keys, dtype='S')
         lengths = np.array(lens, dtype='int32')
         s, f = 0, 0
-        rep0 = lambda w: w
-        rep1 = lambda w: w.replace(' ', '_')
-        rep2 = lambda w: w.title().replace(' ', '_')
+
+        def rep0(w): return w
+
+        def rep1(w): return w.replace(' ', '_')
+
+        def rep2(w): return w.title().replace(' ', '_')
         reps = [rep0, rep1, rep2]
         for compact in np.arange(top):
             loose = self.compact_to_loose.get(compact, None)
@@ -576,7 +579,7 @@ class Corpus():
                     choice = np.array(keys_raw)[idx][np.argmin(d)]
                     # choice = difflib.get_close_matches(word, choices)[0]
                     vector = model[choice]
-                    print compact, word, ' --> ', choice
+                    print(compact, word, ' --> ', choice)
                 except IndexError:
                     pass
             if vector is None:
@@ -677,8 +680,9 @@ class Corpus():
         for name, index in indices.items():
             tokens[name] = index
         a, b = tokens.copy(), tokens.copy()
-        mask = lambda x: np.prod([x[k + '_x'] == x[k + '_y']
-                                  for k in indices.keys()], axis=0)
+
+        def mask(x): return np.prod([x[k + '_x'] == x[k + '_y']
+                                     for k in indices.keys()], axis=0)
         group_keys = ['word_index_x', 'word_index_y', ]
         group_keys += [k + '_x' for k in indices.keys()]
         total = []

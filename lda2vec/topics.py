@@ -103,7 +103,7 @@ def print_top_words_per_topic(data, top_n=10, do_print=True):
         top_words = [data['vocab'][i].strip().replace(' ', '_') for i in top]
         msg = ' '.join(top_words)
         if do_print:
-            print prefix + msg
+            print(prefix + msg)
         lists.append(top_words)
     return lists
 
@@ -131,7 +131,8 @@ def topic_coherence(lists, services=['ca', 'cp', 'cv', 'npmi', 'uci',
     {(0, 'cv'): 0.5678879445677241}
     """
     url = u'http://palmetto.aksw.org/palmetto-webapp/service/{}?words={}'
-    reqs = [url.format(s, '%20'.join(top[:10])) for s in services for top in lists]
+    reqs = [url.format(s, '%20'.join(top[:10]))
+            for s in services for top in lists]
     pool = multiprocessing.Pool()
     coherences = pool.map(get_request, reqs)
     pool.close()

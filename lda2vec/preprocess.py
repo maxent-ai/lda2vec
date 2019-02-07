@@ -1,7 +1,10 @@
-from spacy.en import English
-from spacy.attrs import LOWER, LIKE_URL, LIKE_EMAIL
-
+import spacy
 import numpy as np
+import en_core_web_md as en
+from spacy.attrs import LOWER, LIKE_EMAIL, LIKE_URL
+import warnings
+
+warnings.simplefilter("ignore")
 
 
 def tokenize(texts, max_length, skip=-2, attr=LOWER, merge=False, nlp=None,
@@ -65,39 +68,46 @@ def tokenize(texts, max_length, skip=-2, attr=LOWER, merge=False, nlp=None,
     -2
     """
     if nlp is None:
-        nlp = English()
+        nlp = en.load()
     data = np.zeros((len(texts), max_length), dtype='int32')
     data[:] = skip
     bad_deps = ('amod', 'compound')
+    token_list = []
+    vocab = {}
+    index = 0
     for row, doc in enumerate(nlp.pipe(texts, **kwargs)):
         if merge:
-            # from the spaCy blog, an example on how to merge
-            # noun phrases into single tokens
             for phrase in doc.noun_chunks:
-                # Only keep adjectives and nouns, e.g. "good ideas"
                 while len(phrase) > 1 and phrase[0].dep_ not in bad_deps:
                     phrase = phrase[1:]
                 if len(phrase) > 1:
-                    # Merge the tokens, e.g. good_ideas
                     phrase.merge(phrase.root.tag_, phrase.text,
                                  phrase.root.ent_type_)
-                # Iterate over named entities
                 for ent in doc.ents:
                     if len(ent) > 1:
-                        # Merge them into single tokens
                         ent.merge(ent.root.tag_, ent.text, ent.label_)
-        dat = doc.to_array([attr, LIKE_EMAIL, LIKE_URL]).astype('int32')
+
+        dat = doc.to_array([LOWER, LIKE_EMAIL, LIKE_URL]).astype("int32")
+        for i, token in enumerate(doc):
+            text = token.text.lower()
+            if text not in list(vocab.values()):
+                dat[i][0] = index
+                vocab[index] = text
+                index += 1
+            else:
+                for k, v in vocab.items():
+                    if v == text:
+                        value = k
+                        break
+                dat[i][0] = value
         if len(dat) > 0:
-            dat = dat.astype('int32')
             msg = "Negative indices reserved for special tokens"
             assert dat.min() >= 0, msg
-            # Replace email and URL tokens
             idx = (dat[:, 1] > 0) | (dat[:, 2] > 0)
             dat[idx] = skip
             length = min(len(dat), max_length)
             data[row, :length] = dat[:length, 0].ravel()
-    uniques = np.unique(data)
-    vocab = {v: nlp.vocab[v].lower_ for v in uniques if v != skip}
+
     vocab[skip] = '<SKIP>'
     return data, vocab
 
