@@ -1,6 +1,7 @@
 import spacy
 import numpy as np
 import en_core_web_md as en
+from tqdm import tqdm_notebook as progress
 from spacy.attrs import LOWER, LIKE_EMAIL, LIKE_URL
 import warnings
 
@@ -75,7 +76,7 @@ def tokenize(texts, max_length, skip=-2, attr=LOWER, merge=False, nlp=None,
     token_list = []
     vocab = {}
     index = 0
-    for row, doc in enumerate(nlp.pipe(texts, **kwargs)):
+    for row, doc in progress(enumerate(nlp.pipe(texts, **kwargs))):
         if merge:
             for phrase in doc.noun_chunks:
                 while len(phrase) > 1 and phrase[0].dep_ not in bad_deps:
