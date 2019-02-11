@@ -14,7 +14,7 @@ wheel and is available on Linux/macOS and Windows and supports
 Python 3.6+.
 
 ```bash
-$ pip install lda2vec
+$ pip install pylda2vec
 ```
 
 ## License
