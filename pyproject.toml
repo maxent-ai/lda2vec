@@ -1,5 +1,5 @@
 [metadata]
-name = 'lda2vec'
+name = 'pylda2vec'
 version = '0.0.1'
 description = 'Mixing Dirichlet Topic Models and Word Embeddings to Make lda2vec.'
 author = 'ONLPS'

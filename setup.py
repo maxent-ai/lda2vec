@@ -16,7 +16,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 REQUIRES = []
 
 setup(
-    name='lda2vec',
+    name='pylda2vec',
     version=version,
     description='Mixing Dirichlet Topic Models and Word Embeddings to Make lda2vec',
     long_description=readme,
