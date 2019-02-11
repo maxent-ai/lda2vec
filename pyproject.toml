@@ -1,11 +1,11 @@
 [metadata]
 name = 'lda2vec'
 version = '0.0.1'
-description = ''
-author = 'Bharath G.S'
+description = 'Mixing Dirichlet Topic Models and Word Embeddings to Make lda2vec.'
+author = 'ONLPS'
 author_email = 'royalkingpin@gmail.com'
 license = 'MIT'
-url = 'https://github.com/_/lda2vec'
+url = 'https://github.com/ONLPS/lda2vec'
 
 [requires]
 python_version = ['3.6']

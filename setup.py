@@ -18,17 +18,17 @@ REQUIRES = []
 setup(
     name='lda2vec',
     version=version,
-    description='',
+    description='Mixing Dirichlet Topic Models and Word Embeddings to Make lda2vec',
     long_description=readme,
-    author='Bharath G.S',
+    author='ONLPS',
     author_email='royalkingpin@gmail.com',
-    maintainer='Bharath G.S',
+    maintainer='ONLPS',
     maintainer_email='royalkingpin@gmail.com',
-    url='https://github.com/_/lda2vec',
+    url='https://github.com/ONLPS/lda2vec',
     license='MIT',
 
     keywords=[
-        '',
+        'lda', 'topic-models', 'text', 'text processing', 'nlp'
     ],
 
     classifiers=[
