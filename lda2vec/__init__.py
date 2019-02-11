@@ -1,4 +1,4 @@
-version = '0.0.1'
+__version__ = '1.0.0'
 
 from .dirichlet_likelihood import dirichlet_likelihood
 from .embed_mixture import EmbedMixture
