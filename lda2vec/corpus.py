@@ -2,6 +2,7 @@ from collections import defaultdict
 import numpy as np
 import difflib
 import pandas as pd
+from jellyfish import damerau_levenshtein_distance
 
 try:
     from pyxdameraulevenshtein import damerau_levenshtein_distance_withNPArray
@@ -101,7 +102,8 @@ class Corpus():
         order = np.argsort(counts)[::-1].astype('int32')
         keys, counts = keys[order], counts[order]
         # Add in the specials as a prefix to the other keys
-        specials = np.sort(self.specials.values())
+
+        specials = np.sort(list(self.specials.values()))
         keys = np.concatenate((specials, keys))
         empty = np.zeros(len(specials), dtype='int32')
         counts = np.concatenate((empty, counts))
@@ -532,7 +534,9 @@ class Corpus():
         """
         n_words = len(self.compact_to_loose)
         from gensim.models.word2vec import Word2Vec
-        model = Word2Vec.load_word2vec_format(filename, binary=True)
+        from gensim.models import KeyedVectors
+        model = KeyedVectors.load_word2vec_format(filename, binary=True)
+        #model = Word2Vec.load_word2vec_format(filename, binary=True)
         n_dim = model.syn0.shape[1]
         data = np.random.normal(size=(n_words, n_dim)).astype('float32')
         data -= data.mean()
@@ -571,11 +575,12 @@ class Corpus():
                     break
             if vector is None:
                 try:
-                    word = unicode(word)
+                    word = str(word)
                     idx = lengths >= len(word) - 3
                     idx &= lengths <= len(word) + 3
                     sel = choices[idx]
-                    d = damerau_levenshtein_distance_withNPArray(word, sel)
+                    sel = str(sel.tolist()[0])
+                    d = damerau_levenshtein_distance(word, sel)
                     choice = np.array(keys_raw)[idx][np.argmin(d)]
                     # choice = difflib.get_close_matches(word, choices)[0]
                     vector = model[choice]
