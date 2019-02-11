@@ -1,3 +1,5 @@
+version = '0.0.1'
+
 from .dirichlet_likelihood import dirichlet_likelihood
 from .embed_mixture import EmbedMixture
 from .tracking import Tracking
